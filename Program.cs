@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Windows;
+using System.Media;
 
 
 namespace PokedexConsoleApp
@@ -12,7 +14,7 @@ namespace PokedexConsoleApp
         static async Task Main(string[] args)
         {
             // Inicialização do banco de dados
-            var client = new MongoClient("mongodb+srv://marcosgsrocha:Certi1234*@cluster0.xagwprx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+            var client = new MongoClient("mongodb+srv://marcosgsrocha:<password>@cluster0.xagwprx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
             var database = client.GetDatabase("marcosgsrocha");
             var collection = database.GetCollection<Pokemon>("pokedex");
 
@@ -66,7 +68,8 @@ namespace PokedexConsoleApp
 
         static async Task AdicionarPokemon(IMongoCollection<Pokemon> collection)
         {
-           
+
+            
         }
 
         static async Task BuscarPokemon(IMongoCollection<Pokemon> collection)
@@ -89,6 +92,12 @@ namespace PokedexConsoleApp
             
         }
 
+        public static void CatchSong(string caminho)
+        {
+            SoundPlayer player = new SoundPlayer();
+            player.SoundLocation = caminho;
+            player.Play();
+        }
 
         
     }
