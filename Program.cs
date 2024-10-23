@@ -64,8 +64,42 @@ namespace PokedexConsoleApp
                 Console.WriteLine();
             }
         }
+        static async Task AdicionarPokemon(IMongoCollection<Pokemon> collection)
+        {
+           
+        }
 
-        
+        static async Task BuscarPokemon(IMongoCollection<Pokemon> collection)
+        {
+            
+        }
+
+        static async Task ListarTodosPokemons(IMongoCollection<Pokemon> collection)
+        {
+            
+        }
+
+        static async Task AtualizarPokemon(IMongoCollection<Pokemon> collection)
+        {
+            
+        }
+
+        static async Task DeletarPokemon(IMongoCollection<Pokemon> collection)
+        {
+            
+        }
+
+
+        public static void PlaySound(string caminho)
+        {
+                SoundPlayer player = new SoundPlayer();
+                player.SoundLocation = caminho;
+                player.Play();
+            
+
+        }
+    }
+    
 }
 public class Pokemon
     {
