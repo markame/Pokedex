@@ -66,27 +66,145 @@ namespace PokedexConsoleApp
         }
         static async Task AdicionarPokemon(IMongoCollection<Pokemon> collection)
         {
-           
+           Console.Write("Nome do Pokemon: ");
+ var nome = Console.ReadLine();
+ Console.Write("Peso do Pokemon: ");
+ var peso = double.Parse(Console.ReadLine());
+ Console.Write("Tamanho do Pokemon: ");
+ var tamanho = double.Parse(Console.ReadLine());
+ Console.Write("Tipo do Pokemon: ");
+ var tipo = Console.ReadLine();
+
+ List<Ataque> ataques = new List<Ataque>();
+ for (int i = 0; i < 4; i++)
+ {
+     Console.Write($"Nome do Ataque {i + 1}: ");
+     var nomeAtaque = Console.ReadLine();
+     Console.Write($"Poder do Ataque {i + 1}: ");
+     var poderAtaque = int.Parse(Console.ReadLine());
+     ataques.Add(new Ataque { Nome = nomeAtaque, Poder = poderAtaque });
+ }
+
+ var pokemon = new Pokemon
+ {
+     Nome = nome,
+     Peso = peso,
+     Tamanho = tamanho,
+     Tipo = tipo,
+     Ataques = ataques
+ };
+
+ await collection.InsertOneAsync(pokemon);
+ Console.WriteLine("Pokemon adicionado com sucesso.");
+CatchSong("soundcatch.wav");
+
+
         }
 
         static async Task BuscarPokemon(IMongoCollection<Pokemon> collection)
         {
-            
+            Console.Write("Digite o nome do Pokemon: ");
+var nome = Console.ReadLine();
+var filter = Builders<Pokemon>.Filter.Eq(p => p.Nome, nome);
+var pokemon = await collection.Find(filter).FirstOrDefaultAsync();
+if (pokemon != null)
+{
+    Console.WriteLine($"Pokemon encontrado:");
+    Console.WriteLine($"Nome: {pokemon.Nome}");
+    Console.WriteLine($"Peso: {pokemon.Peso}");
+    Console.WriteLine($"Tamanho: {pokemon.Tamanho}");
+    Console.WriteLine($"Tipo: {pokemon.Tipo}");
+    Console.WriteLine("Ataques:");
+    foreach (var ataque in pokemon.Ataques)
+    {
+         Console.WriteLine($"- {ataque.Nome} (Poder: {ataque.Poder})");
+    }
+}
+else
+{
+    Console.WriteLine("Pokemon não encontrado.");
+}
+
+
         }
 
         static async Task ListarTodosPokemons(IMongoCollection<Pokemon> collection)
         {
-            
+            var pokemons = await collection.Find(_ => true).ToListAsync();
+ foreach (var pokemon in pokemons)
+ {
+     Console.WriteLine($"Nome: {pokemon.Nome}");
+     Console.WriteLine($"Peso: {pokemon.Peso}");
+     Console.WriteLine($"Tamanho: {pokemon.Tamanho}");
+     Console.WriteLine($"Tipo: {pokemon.Tipo}");
+     Console.WriteLine("Ataques:");
+     foreach (var ataque in pokemon.Ataques)
+     {
+         Console.WriteLine($"- {ataque.Nome} (Poder: {ataque.Poder})");
+     }
+     Console.WriteLine();
+ }
+ Console.Write("Digite o nome do Pokemon que deseja atualizar: ");
+var nome = Console.ReadLine();
+var filter = Builders<Pokemon>.Filter.Eq(p => p.Nome, nome);
+var pokemon = await collection.Find(filter).FirstOrDefaultAsync();
+if (pokemon != null)
+{
+    Console.Write("Digite o novo peso: ");
+    var novoPeso = double.Parse(Console.ReadLine());
+    Console.Write("Digite o novo tamanho: ");
+    var novoTamanho = double.Parse(Console.ReadLine());
+    Console.Write("Digite o novo tipo: ");
+    var novoTipo = Console.ReadLine();
+
+    
+
         }
 
         static async Task AtualizarPokemon(IMongoCollection<Pokemon> collection)
         {
-            
+            List<Ataque> novosAtaques = new List<Ataque>();
+    for (int i = 0; i < 4; i++)
+    {
+        Console.Write($"Nome do novo Ataque {i + 1}: ");
+        var nomeAtaque = Console.ReadLine();
+        Console.Write($"Poder do novo Ataque {i + 1}: ");
+        var poderAtaque = int.Parse(Console.ReadLine());
+
+        novosAtaques.Add(new Ataque { Nome = nomeAtaque, Poder = poderAtaque });
+    }
+
+    var update = Builders<Pokemon>.Update.Set(p => p.Peso, novoPeso)
+                                         .Set(p => p.Tamanho, novoTamanho)
+                                         .Set(p => p.Tipo, novoTipo)
+                                         .Set(p => p.Ataques, novosAtaques);
+ await collection.UpdateOneAsync(filter, update);
+    Console.WriteLine("Pokemon atualizado com sucesso.");
+}
+else
+{
+    Console.WriteLine("Pokemon não encontrado.");
+}
+
         }
 
         static async Task DeletarPokemon(IMongoCollection<Pokemon> collection)
         {
-            
+           Console.Write("Digite o nome do Pokemon que deseja deletar: ");
+var nome = Console.ReadLine();
+var filter = Builders<Pokemon>.Filter.Eq(p => p.Nome, nome);
+var result = await collection.DeleteOneAsync(filter);
+
+if (result.DeletedCount > 0)
+{
+    Console.WriteLine("Pokemon deletado com sucesso.");
+}
+else
+{
+    Console.WriteLine("Pokemon não encontrado.");
+}
+    
+ 
         }
 
 
